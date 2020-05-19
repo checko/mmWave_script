@@ -1,0 +1,2 @@
+clone https://github.com/meganz/mingw-std-threads.git, 
+copy all the mingw.*.h here
