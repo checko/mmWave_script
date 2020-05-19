@@ -9,7 +9,7 @@ SOURCES_REC	= CLI_Record/cli_record_main.cpp Common/Json_Utils/dist/jsoncpp.cpp 
 DIRECTORY 	= Release
 
 ifeq ($(OS),Windows_NT)
-	RM = del /Q
+	RM = rm -f
 	SOURCES_OSAL= Common/Osal_Utils/osal_win.cpp
 	LDFLAGS_DLL = -lws2_32
 	LDFLAGS_EXE = -L Release/. -lRF_API -lws2_32
@@ -37,17 +37,11 @@ $(DIRECTORY):
 		$(TARGET_DIR)
 
 $(TARGET_DLL): $(SOURCES_DLL)
-		$(CC_DLL) $(CFLAGS_DLL) -o $(TARGET_DLL) -fPIC $(LDFLAGS_PTHREAD) $(SOURCES_DLL) $(SOURCES_OSAL) $(LDFLAGS_DLL)
+		$(CC_DLL) $(CFLAGS_DLL) -o $(TARGET_DLL) -fPIC -fpermissive $(LDFLAGS_PTHREAD) $(INCFLAGS) $(SOURCES_DLL) $(SOURCES_OSAL) $(LDFLAGS_DLL)
 $(TARGET_CTRL): $(SOURCES_CTRL)
 		$(CC_EXE) $(CFLAGS_EXE) -o $(TARGET_CTRL) $(SOURCES_CTRL) $(SOURCES_OSAL) $(INCFLAGS) $(LDFLAGS_EXE)
 $(TARGET_REC): $(SOURCES_REC)
 		$(CC_EXE) $(CFLAGS_EXE) -o $(TARGET_REC) $(SOURCES_REC) $(SOURCES_OSAL) $(LDFLAGS_PTHREAD) $(INCFLAGS) $(LDFLAGS_EXE)
 
 clean:
-ifeq ($(OS),Windows_NT)
-	if exist $(TARGET_DLL) $(RM) $(TARGET_DLL)
-	if exist $(TARGET_CTRL) $(RM) $(TARGET_CTRL)
-	if exist $(TARGET_REC) $(RM) $(TARGET_REC)
-else
 		$(RM) $(TARGET_DLL) $(TARGET_CTRL) $(TARGET_REC)
-endif
